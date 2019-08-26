@@ -51,11 +51,11 @@ Although not required, you can run **Espcap** in a virtual environment if you wa
    - Create the */etc/espcap* directory and copy it there.
    - Any other directory you want.  However, if you don't use one of the previous options, you'll need to add the directory path to the list of config directories contained in the *tshark.py* file.
 
-7. cd into the *src* directory.
+7. cd into the *project home* directory.
 
-8. Run *espcap.py* to index some packet data in Elasticsearch:
+8. Run *python3.7 -m espcap* to index some packet data in Elasticsearch:
     ```
-    espcap.py --file=test_pcaps/test_http.pcap --node=localhost:9200
+    python3.7 -m espcap --file=test_pcaps/test_http.pcap --node=localhost:9200
     ```
 
 9. Run *packet_query.sh* as follows to check that the packet data resides in your Elasticsearch instance:
@@ -272,20 +272,20 @@ Trying to index all the possible packet fields can slow Elasticsearch down, so a
 | frame    | frame_frame_protocols                   | simple
 | ip       | ip_ip_src                               | ip
 | ip       | ip_ip_dst                               | ip
-| ip       | ip_ip_version                           | integer
-| udp      | udp_udp_srcport                         | integer
-| udp      | udp_udp_dstport                         | integer
-| tcp      | tcp_tcp_srcport                         | integer
-| tcp      | tcp_tcp_dstport                         | integer
-| tcp      | tcp_flags_tcp_flags_str                 | keyword
-| tcp      | tcp_flags_tcp_flags_urg                 | integer
-| tcp      | tcp_flags_tcp_flags_ack                 | integer
-| tcp      | tcp_flags_tcp_flags_push                | integer
-| tcp      | tcp_flags_tcp_flags_syn                 | integer
-| tcp      | tcp_flags_tcp_flags_fin                 | integer
-| tcp      | tcp_tcp_seq                             | integer
-| tcp      | tcp_tcp_ack                             | integer
-| tcp      | tcp_tcp_window_size                     | integer
+| ip       | ip_ip_version                           | long
+| udp      | udp_udp_srcport                         | long
+| udp      | udp_udp_dstport                         | long
+| tcp      | tcp_tcp_srcport                         | long
+| tcp      | tcp_tcp_dstport                         | long
+| tcp      | tcp_flags_tcp_flags_str                 | long
+| tcp      | tcp_flags_tcp_flags_urg                 | long
+| tcp      | tcp_flags_tcp_flags_ack                 | long
+| tcp      | tcp_flags_tcp_flags_push                | long
+| tcp      | tcp_flags_tcp_flags_syn                 | long
+| tcp      | tcp_flags_tcp_flags_fin                 | long
+| tcp      | tcp_tcp_seq                             | long
+| tcp      | tcp_tcp_ack                             | long
+| tcp      | tcp_tcp_window_size                     | long
 
 The mapping for `frame_frame_protocols` enables you to search for any protocol within a given packet . For example, if you want to revise the query used before to find DNS, instead of using ports, you could query with the `dns` in the `frame_frame_protocols` field:
 

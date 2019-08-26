@@ -139,7 +139,7 @@ def main(node, nic, file, dir, bpf, chunk, count, list):
             files.sort()
             for file in files:
                 pcap_files.append(dir + '/' + file)
-            init_file_capture(es=es, tshark=tshark, indexer=indexer, pcap_files=pcap_files, chunk=chunk)
+            init_file_capture(es=es, tshark=tshark, pcap_files=pcap_files, chunk=chunk)
 
     except Exception as e:
         print('[ERROR] ', e)

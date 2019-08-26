@@ -1,4 +1,4 @@
-from src.logger import clean_log_file, log
+from espcap.logger import log, clean_log_file
 from tests.base_tests import BaseTests
 
 

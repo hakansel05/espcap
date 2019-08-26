@@ -1,6 +1,6 @@
 from click.testing import CliRunner
 
-from src.espcap import main
+from espcap.espcap import main
 from tests.base_tests import BaseTests
 
 

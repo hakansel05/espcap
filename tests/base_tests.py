@@ -1,6 +1,6 @@
 import unittest
 
-from src.logger import log, clean_log_file
+from espcap.logger import log, clean_log_file
 
 
 class BaseTests(unittest.TestCase):

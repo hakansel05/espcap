@@ -28,10 +28,10 @@ import click
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
-from src import indexer
-from src.indexer import dump_packets, index_packets
-from src.logger import log
-from src.tshark import Tshark
+from espcap import indexer
+from espcap.indexer import dump_packets, index_packets
+from espcap.logger import log
+from espcap.tshark import Tshark
 
 
 def init_live_capture(es, tshark, nic, bpf, chunk, count):
@@ -145,8 +145,3 @@ def main(node, nic, file, dir, bpf, chunk, count, list):
         print('[ERROR] ', e)
         syslog.syslog(syslog.LOG_ERR, e)
         sys.exit(1)
-
-
-if __name__ == '__main__':
-    main()
-    print('Done')

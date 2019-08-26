@@ -1,7 +1,7 @@
 import datetime
 from pathlib import Path
 
-LOG_FILE = '../logs/packet-errors.log'
+LOG_FILE = './logs/packet-errors.log'
 
 LOG_FILE_NAME = Path(LOG_FILE)
 LOG_FILE_NAME.touch(exist_ok=True)

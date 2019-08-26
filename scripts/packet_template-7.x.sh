@@ -36,57 +36,57 @@ curl -H 'Content-Type: application/json' -XPUT 'http://'$1'/_template/packets' -
                   "type": "ip"
                 },
                 "ip_ip_version": {
-                  "type": "integer"
+                  "type": "long"
                 }
               }
             },
             "udp": {
               "properties": {
                 "udp_udp_srcport": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "udp_udp_dstport": {
-                  "type": "integer"
+                  "type": "long"
                 }
               }
             },
             "tcp": {
               "properties": {
                 "tcp_tcp_srcport": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_tcp_dstport": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_flags_tcp_flags_str": {
                   "type": "keyword"
                 },
                 "tcp_flags_tcp_flags_urg": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_flags_tcp_flags_ack": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_flags_tcp_flags_push": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_flags_tcp_flags_reset": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_flags_tcp_flags_syn": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_flags_tcp_flags_fin": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_tcp_seq": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_tcp_ack": {
-                  "type": "integer"
+                  "type": "long"
                 },
                 "tcp_tcp_window_size": {
-                  "type": "integer"
+                  "type": "long"
                 }
               }
             }

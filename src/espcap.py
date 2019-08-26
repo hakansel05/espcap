@@ -18,6 +18,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 """
+import json
 
 import syslog
 import os
@@ -27,8 +28,10 @@ import click
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
-from tshark import Tshark
-from indexer import index_packets, dump_packets
+from src import indexer
+from src.indexer import dump_packets, index_packets
+from src.logger import log
+from src.tshark import Tshark
 
 
 def init_live_capture(es, tshark, nic, bpf, chunk, count):
@@ -74,7 +77,13 @@ def init_file_capture(es, tshark, pcap_files, chunk):
             if es is None:
                 dump_packets(capture)
             else:
-                helpers.bulk(client=es, actions=index_packets(capture=capture), chunk_size=chunk, raise_on_error=True)
+                for ok, response in helpers.streaming_bulk(client=es, actions=index_packets(capture=capture),
+                                                           chunk_size=chunk,
+                                                           raise_on_error=False,
+                                                           raise_on_exception=False, request_timeout=3600):
+                    if not ok:
+                        # failure inserting
+                        log(json.dumps(response))
 
     except Exception as e:
         print('[ERROR] ', e)
@@ -89,7 +98,8 @@ def init_file_capture(es, tshark, pcap_files, chunk):
 @click.option('--dir', default=None, help='PCAP directory for multiple file capture (default=None, if nic specified)')
 @click.option('--bpf', default=None, help='Packet filter for live capture (default=all packets)')
 @click.option('--chunk', default=1000, help='Number of packets to bulk index (default=1000)')
-@click.option('--count', default=0, help='Number of packets to capture during live capture (default=0, capture indefinitely)')
+@click.option('--count', default=0,
+              help='Number of packets to capture during live capture (default=0, capture indefinitely)')
 @click.option('--list', is_flag=True, help='Lists the network interfaces')
 def main(node, nic, file, dir, bpf, chunk, count, list):
     try:
@@ -128,7 +138,7 @@ def main(node, nic, file, dir, bpf, chunk, count, list):
             files = os.listdir(dir)
             files.sort()
             for file in files:
-                pcap_files.append(dir+'/'+file)
+                pcap_files.append(dir + '/' + file)
             init_file_capture(es=es, tshark=tshark, indexer=indexer, pcap_files=pcap_files, chunk=chunk)
 
     except Exception as e:

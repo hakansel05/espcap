@@ -65,10 +65,11 @@ Although not required, you can run **Espcap** in a virtual environment if you wa
 
 ## Running Examples
 
++ In project home folder
 + Display the following help message:
   ```
-  espcap.py --help
-  Usage: espcap.py [OPTIONS]
+  python3.7 -m espcap --help
+  Usage: python3.7 -m espcap [OPTIONS]
 
   Options:
     --node  TEXT     Elasticsearch IP and port (default=None, dump packets to
@@ -88,32 +89,32 @@ Although not required, you can run **Espcap** in a virtual environment if you wa
 
 + Load the test packet capture files and index the packets in the Elasticsearch cluster running at 10.0.0.1:9200, assuming your present working directory is *espcap/src*:
   ```
-  espcap.py --dir=../test_pcaps --node=10.0.0.1:9200
+  python3.7 -m espcap --dir=../test_pcaps --node=10.0.0.1:9200
   ```
 
 + Same as the previous except load the *test_pcaps/test_http.pcap* file:
   ```
-  espcap.py --file=../test_pcaps/test_http.pcap --node=10.0.0.1:9200
+  python3.7 -m espcap --file=../test_pcaps/test_http.pcap --node=10.0.0.1:9200
   ```
 
 + Do a live capture from the network interface `eth0`, get all packets and index them in the Elasticsearch cluster running at 10.0.0.1:9200:
   ```
-  espcap.py --nic=eth0 --node=10.0.0.1:9200
+  python3.7 -m espcap --nic=eth0 --node=10.0.0.1:9200
   ```
 
 + Same as the previous except dump the packets to `stdout`:
   ```
-  espcap.py --nic=eth0
+  python3.7 -m espcap --nic=eth0
   ```
 
 + Do a live capture of TCP packets with source port or destination port == 80 and index in Elasticsearch running at 10.0.0.1:9200:
   ```
-  espcap.py --nic=eth0 --bpf="tcp port 443" --node=10.0.0.1:9200
+  python3.7 -m espcap --nic=eth0 --bpf="tcp port 443" --node=10.0.0.1:9200
   ```
 
 + List the network interfaces
   ```
-  espcap.py --list
+  python3.7 -m espcap --list
   ```
 
 ## Packet Indexing

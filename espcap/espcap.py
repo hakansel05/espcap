@@ -19,16 +19,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 """
 import json
-
-import syslog
 import os
 import sys
-import click
+import syslog
 
+import click
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
-from espcap import indexer
 from espcap.indexer import dump_packets, index_packets
 from espcap.logger import log
 from espcap.tshark import Tshark
@@ -59,9 +57,10 @@ def init_live_capture(es, tshark, nic, bpf, chunk, count):
         sys.ext(1)
 
 
-def init_file_capture(es, tshark, pcap_files, chunk):
+def init_file_capture(es, tshark, pcap_files, chunk, stop_on_error=False):
     """ Set up for file packet capture.
 
+    :param stop_on_error:  while indexing raise error/exception and stop indexing
     :param es: Elasticsearch cluster handle, None if packets are dumped to stdout
     :param tshark: Tshark instance
     :param indexer: Indexer instance
@@ -79,8 +78,8 @@ def init_file_capture(es, tshark, pcap_files, chunk):
             else:
                 for ok, response in helpers.streaming_bulk(client=es, actions=index_packets(capture=capture),
                                                            chunk_size=chunk,
-                                                           raise_on_error=False,
-                                                           raise_on_exception=False, request_timeout=3600):
+                                                           raise_on_error=stop_on_error,
+                                                           raise_on_exception=stop_on_error, request_timeout=3600):
                     if not ok:
                         # failure inserting
                         log(json.dumps(response))
@@ -101,7 +100,8 @@ def init_file_capture(es, tshark, pcap_files, chunk):
 @click.option('--count', default=0,
               help='Number of packets to capture during live capture (default=0, capture indefinitely)')
 @click.option('--list', is_flag=True, help='Lists the network interfaces')
-def main(node, nic, file, dir, bpf, chunk, count, list):
+@click.option('--stop_on_error', is_flag=True, help='In error case while indexing, stop process')
+def main(node, nic, file, dir, bpf, chunk, count, list, stop_on_error):
     try:
         tshark = Tshark()
         tshark.set_interrupt_handler()
@@ -131,7 +131,7 @@ def main(node, nic, file, dir, bpf, chunk, count, list):
         elif file is not None:
             pcap_files = []
             pcap_files.append(file)
-            init_file_capture(es=es, tshark=tshark, pcap_files=pcap_files, chunk=chunk)
+            init_file_capture(es=es, tshark=tshark, pcap_files=pcap_files, chunk=chunk, stop_on_error=stop_on_error)
 
         elif dir is not None:
             pcap_files = []
@@ -139,7 +139,7 @@ def main(node, nic, file, dir, bpf, chunk, count, list):
             files.sort()
             for file in files:
                 pcap_files.append(dir + '/' + file)
-            init_file_capture(es=es, tshark=tshark, pcap_files=pcap_files, chunk=chunk)
+            init_file_capture(es=es, tshark=tshark, pcap_files=pcap_files, chunk=chunk, stop_on_error=stop_on_error)
 
     except Exception as e:
         print('[ERROR] ', e)

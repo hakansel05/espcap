@@ -84,6 +84,7 @@ Although not required, you can run **Espcap** in a virtual environment if you wa
     --count INTEGER  Number of packets to capture during live capture
                      (default=0, capture indefinitely)
     --list           List the network interfaces
+    --stop_on_error  In error case while indexing, stop process
     --help           Show this message and exit.
   ```
 

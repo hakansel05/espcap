@@ -82,8 +82,13 @@ def init_file_capture(es, tshark, pcap_files, chunk, stop_on_error=False):
                                                            raise_on_exception=stop_on_error, request_timeout=3600):
                     if not ok:
                         # failure inserting
-                        log(json.dumps(response))
-
+                        try:
+                            log(json.dumps(response))
+                        except (TypeError, OverflowError):
+                            if isinstance(response, str):
+                                log(response)
+                            else:
+                                log("There is an error in unknown type: {}".format(type(response)))
     except Exception as e:
         print('[ERROR] ', e)
         syslog.syslog(syslog.LOG_ERR, e)
